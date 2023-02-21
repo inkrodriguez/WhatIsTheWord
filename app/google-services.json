@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "217219739107",
+    "project_id": "whatistheword-839a8",
+    "storage_bucket": "whatistheword-839a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217219739107:android:8de12a3c36046b546544d6",
+        "android_client_info": {
+          "package_name": "com.inkrodriguez.whatistheword"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217219739107-nh8n73gtp6bj753dbenl9glfu9tf8gsd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBfE8PKUnMf3VPaKAaLsK1plKGZN3krnQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217219739107-nh8n73gtp6bj753dbenl9glfu9tf8gsd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
