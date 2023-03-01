@@ -1,14 +1,19 @@
-package com.inkrodriguez.whatistheword
+package com.inkrodriguez.whatistheword.ViewModel
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.media.MediaPlayer
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.finishAfterTransition
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.inkrodriguez.whatistheword.HomeActivity
+import com.inkrodriguez.whatistheword.R
+import com.inkrodriguez.whatistheword.StartActivity
 
 class StartViewModel: ViewModel() {
     var db = FirebaseFirestore.getInstance()
@@ -16,11 +21,12 @@ class StartViewModel: ViewModel() {
     var editSenha = MutableLiveData<String>()
 
     @SuppressLint("StaticFieldLeak")
-
     private lateinit var context: Context
     fun setContext(context: Context){
         this.context = context
     }
+
+
 
     fun signInOrRegister(){
         var nome = editNome.value.toString()
@@ -40,7 +46,8 @@ class StartViewModel: ViewModel() {
     }
 
     fun nextActivity(){
-        var intent = Intent(context, HomeActivity::class.java).addFlags(FLAG_ACTIVITY_NEW_TASK).putExtra("nome", editNome.value)
+        var intent = Intent(context, HomeActivity::class.java).addFlags(FLAG_ACTIVITY_NEW_TASK)
+            .putExtra("nome", editNome.value)
         startActivity(context, intent, null)
     }
 
@@ -60,6 +67,13 @@ class StartViewModel: ViewModel() {
             Toast.makeText(context, "Erro!", Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun somBackground(){
+        var background = R.raw.backgroundmusic
+        var mediaPlayer: MediaPlayer = MediaPlayer.create(context, background);
+        mediaPlayer.start();
+    }
+
 
 }
 

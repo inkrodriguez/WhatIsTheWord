@@ -1,19 +1,29 @@
 package com.inkrodriguez.whatistheword
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.AttributeSet
+import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.inkrodriguez.whatistheword.Utils.Firebase
+import com.inkrodriguez.whatistheword.ViewModel.HomeViewModel
 import com.inkrodriguez.whatistheword.databinding.ActivityHomeBinding
 
+@Suppress("DEPRECATION")
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeViewModel
+    private lateinit var intentNome: String
+    private var firebase = Firebase()
+    var db = FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -21,11 +31,12 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        var intent = intent.getStringExtra("nome")
 
+        intentNome = intent.getStringExtra("nome").toString()
+        viewModel.nome = intent.getStringExtra("nome").toString()
         viewModel.setContext(applicationContext)
 
-        binding.tvWelcome.text = "Ola, $intent"
+        binding.tvWelcome.text = "Ola, $intentNome"
 
         val editWord = binding.editWord
         val btnCheck = binding.btnCheck
@@ -38,9 +49,19 @@ class HomeActivity : AppCompatActivity() {
             tvMoeda.text = it.toString()
         })
 
-        viewModel.player.life.observe(this, Observer {
+        viewModel.player.vida.observe(this, Observer {
             tvVida.text = it.toString()
+            if(it == 0){
+                //update
+                db.collection("users").document(intentNome).update("pontuacao", tvMoeda.text).addOnCompleteListener {
+                    var intent = Intent(this, FinishActivity::class.java).putExtra("nome", intentNome).putExtra("pontuacao", tvMoeda.text)
+                    startActivity(intent)
+                    finish()
+                    finishAffinity()
+                }
+            }
         })
+
 
         viewModel.palavra.resultadoFinal.observe(this, Observer {
             var palavra = it.toString()
@@ -51,22 +72,9 @@ class HomeActivity : AppCompatActivity() {
             viewModel.checkWord("${editWord.text.trim()}")
             editWord.text.clear()
             Toast.makeText(this, "${viewModel.returnResult.value}", Toast.LENGTH_SHORT).show()
-            gameOver()
         }
 
     }
 
-    fun gameOver(){
-        if(viewModel.player.vida == 0){
-            val pontuacaoFinal: Int = viewModel.player.moeda
-            var intent = Intent(this, FinishActivity::class.java).putExtra("pontuacao", pontuacaoFinal)
-            startActivity(intent)
-
-            viewModel.palavra.resetVariables()
-            viewModel.player.resetPlayer()
-
-        }
-
-    }
 
 }
