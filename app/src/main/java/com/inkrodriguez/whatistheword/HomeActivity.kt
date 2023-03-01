@@ -52,15 +52,36 @@ class HomeActivity : AppCompatActivity() {
         viewModel.player.vida.observe(this, Observer {
             tvVida.text = it.toString()
             if(it == 0){
-                //update
-                db.collection("users").document(intentNome).update("pontuacao", tvMoeda.text).addOnCompleteListener {
-                    var intent = Intent(this, FinishActivity::class.java).putExtra("nome", intentNome).putExtra("pontuacao", tvMoeda.text)
-                    startActivity(intent)
-                    finish()
-                    finishAffinity()
+                //Lê pontuação atual
+                db.collection("users").document(intentNome).addSnapshotListener { it, error ->
+                    if (it != null) {
+                        var pontuacaoAtual = it.getString("pontuacao")
+                        if(tvMoeda.text.toString().toInt() > pontuacaoAtual.toString().toInt()) {
+                            //update pontuação
+                            db.collection("users").document(intentNome)
+                                .update("pontuacao", tvMoeda.text).addOnCompleteListener {
+                                    var intent = Intent(this, FinishActivity::class.java).putExtra(
+                                        "nome",
+                                        intentNome
+                                    ).putExtra("pontuacao", tvMoeda.text)
+                                    startActivity(intent)
+                                    finish()
+                                    finishAffinity()
+                                }
+                        } else {
+                            Toast.makeText(this, "DEU RUIM ${pontuacaoAtual.toString().toInt()} e ${tvMoeda.text.toString().toInt()}", Toast.LENGTH_SHORT).show()
+                                var intent = Intent(this, FinishActivity::class.java).putExtra(
+                                    "nome",
+                                    intentNome
+                                ).putExtra("pontuacao", tvMoeda.text)
+                                startActivity(intent)
+                                finish()
+                                finishAffinity()
+                            }
+                        }
+                    }
                 }
-            }
-        })
+            })
 
 
         viewModel.palavra.resultadoFinal.observe(this, Observer {
