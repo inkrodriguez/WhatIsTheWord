@@ -13,13 +13,6 @@
         android:theme="@style/Theme.WhatIsTheWord"
         tools:targetApi="31">
         <activity
-            android:name=".WinnerActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".FinishActivity"
             android:exported="false">
             <meta-data

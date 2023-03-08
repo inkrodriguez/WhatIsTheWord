@@ -74,6 +74,5 @@ class StartViewModel: ViewModel() {
         mediaPlayer.start();
     }
 
-
 }
 

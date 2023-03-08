@@ -37,7 +37,6 @@ class FinishActivity : AppCompatActivity() {
         }
 
         var lista3: MutableList<User> = mutableListOf()
-        var lista: MutableList<String> = mutableListOf()
         db = FirebaseFirestore.getInstance()
         db.collection("users").orderBy("pontuacao", Query.Direction.DESCENDING)
             .addSnapshotListener { value, error ->
@@ -48,8 +47,6 @@ class FinishActivity : AppCompatActivity() {
                     var recyclerView = binding.recyclerView
                     var adapter = MyAdapter(lista3)
                     recyclerView.adapter = adapter
-
-                    lista.add(it.get("username").toString())
 
                     try {
                         binding.primeiroGanhador.text = lista3[0].username

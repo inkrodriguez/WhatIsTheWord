@@ -55,7 +55,7 @@ class HomeActivity : AppCompatActivity() {
                 //Lê pontuação atual
                 db.collection("users").document(intentNome).addSnapshotListener { it, error ->
                     if (it != null) {
-                        var pontuacaoAtual = it.getString("pontuacao")
+                        var pontuacaoAtual = it.get("pontuacao")
                         if(tvMoeda.text.toString().toInt() > pontuacaoAtual.toString().toInt()) {
                             //update pontuação
                             db.collection("users").document(intentNome)
